@@ -1,67 +1,53 @@
 import os
 import discord
-import subprocess
+from discord.ext import commands
 from dotenv import load_dotenv
 
 # Load Discord Api Token
 load_dotenv()
-DISCORD_KEY = os.getenv('DISCORD_BOT_TOKEN')
-if DISCORD_KEY is None:
-    exit(1)
 
-client = discord.Client()
-global speakQueue
-speakQueue = []
-global isSpeak
-isSpeak = False
-global channel
-channel = ""
+cogs = [
+    "cogs.error",
+    "cogs.events"
+]
 
-@client.event
-async def on_ready():
-    print("Login success")
+class Yomiage(commands.Bot):
 
-@client.event
-async def on_message(message):
-    global isSpeak
-    global speakQueue
-    global channel
+    def __init__(self, prefix) -> None:
+        intents = discord.Intents.default()
+        super().__init__(
+            command_prefix=prefix,
+            intents=intents,
+            # help_command=None,
+            case_insensitive=True
+        )
 
-    if message.author.bot:
-        return
+        for cog in cogs:
+            try:
+                self.load_extension(cog)
+            except Exception as e:
+                print(e)
 
-    if message.content == "!yomiage":
-        if message.author.voice is None:
-            await message.channel.send("ボイスチャンネルに接続してください")
-            return
-        await message.author.voice.channel.connect()
-        isSpeak = True
-        channel = message.channel.id
-        await message.channel.send("接続しました")
-    elif message.content == "!usero":
-        if message.guild.voice_client is None:
-            await message.channel.send("接続していません")
-            return
-        await message.guild.voice_client.disconnect()
-        isSpeak = False
-        await message.channel.send("切断しました")
-    else:
-        if isSpeak and message.channel.id == channel:
-            subprocess.run(
-                    [
-                        "open_jtalk",
-                        "-m",
-                        "/usr/share/hts-voice/nitech-jp-atr503-m001/nitech_jp_atr503_m001.htsvoice",
-                        "-x",
-                        "/var/lib/mecab/dic/open-jtalk/naist-jdic",
-                        "-ow",
-                        "/tmp/wav.opus"
-                    ],
-                    input=message.content,
-                    shell=False,
-                    text=True
-                    )
-            message.guild.voice_client.play(
-                    discord.FFmpegPCMAudio("/tmp/wav.opus"))
+    async def on_ready(self):
+        print(f"Login success as {self.user.name}")
+        # await self.change_presence(activity=discord.Game(name="!yomiage", type=1))
 
-client.run(DISCORD_KEY)
+def run():
+    bot = Yomiage(prefix="!")
+
+    try:
+        TOKEN = os.environ["DISCORD_BOT_TOKEN"]
+    except KeyError:
+        print("Token is not found")
+    except Exception as e:
+        print(e)
+
+    try:
+        bot.run(TOKEN)
+    except discord.errors.LoginFailure:
+        print("Invalid Token")
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    run()
