@@ -8,7 +8,6 @@ load_dotenv()
 DISCORD_KEY = os.getenv('DISCORD_BOT_TOKEN')
 if DISCORD_KEY is None:
     exit(1)
-print("Discord Token: {}".format(DISCORD_KEY))
 
 client = discord.Client()
 global speakQueue
@@ -18,21 +17,19 @@ isSpeak = False
 global channel
 channel = ""
 
-
 @client.event
 async def on_ready():
     print("Login success")
 
-
 @client.event
 async def on_message(message):
-    print("on_message")
     global isSpeak
     global speakQueue
     global channel
+
     if message.author.bot:
-        print("message.author.bot")
         return
+
     if message.content == "!yomiage":
         if message.author.voice is None:
             await message.channel.send("ボイスチャンネルに接続してください")
