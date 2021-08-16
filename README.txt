@@ -10,7 +10,7 @@
 
 python3環境で動作します
 必須モジュール
-・discord
+・discord.py
 ・python-dotenv
 
 以下の外部コマンド・パッケージに依存しています
