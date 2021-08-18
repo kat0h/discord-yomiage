@@ -3,6 +3,7 @@ import subprocess
 import discord
 from discord.ext import commands
 
+
 class Events(commands.Cog):
 
     def __init__(self, bot) -> None:
@@ -25,7 +26,11 @@ class Events(commands.Cog):
             return
 
         prefix = await self.bot.get_prefix(message)
-        content = re.sub("https?://[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+", "", message.content).replace("\n", "")
+        content = re.sub(
+                "https?://[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+",
+                "",
+                message.content
+                ).replace("\n", "")
 
         isCommand = False
 
@@ -33,7 +38,7 @@ class Events(commands.Cog):
             command_name = f"{prefix}{command.name}"
             name_result = re.match(command_name, content)
 
-            if name_result != None:
+            if name_result is not None:
                 isCommand = True
                 break
 
@@ -41,7 +46,7 @@ class Events(commands.Cog):
                 aliase_name = f"{prefix}{aliase}"
                 aliase_result = re.match(aliase_name, content)
 
-                if aliase_result != None:
+                if aliase_result is not None:
                     isCommand = True
                     break
 
@@ -131,6 +136,7 @@ class Events(commands.Cog):
                 print(e)
 
             self.queue.pop(0)
+
 
 def setup(bot):
     bot.add_cog(Events(bot))
