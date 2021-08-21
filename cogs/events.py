@@ -64,6 +64,8 @@ class Events(commands.Cog):
 
         try:
             await ctx.author.voice.channel.connect()
+        except discord.ClientException:
+            pass
         except Exception as e:
             print(e)
             return
