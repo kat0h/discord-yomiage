@@ -11,6 +11,7 @@ cogs = [
     "cogs.events"
 ]
 
+
 class Yomiage(commands.Bot):
 
     def __init__(self, prefix) -> None:
@@ -30,7 +31,9 @@ class Yomiage(commands.Bot):
 
     async def on_ready(self):
         print(f"Login success as {self.user.name}")
-        # await self.change_presence(activity=discord.Game(name="!yomiage", type=1))
+        # await self.change_presence(activity=discord.Game(
+        # name="!yomiage", type=1))
+
 
 def run():
     bot = Yomiage(prefix="!")
@@ -48,6 +51,7 @@ def run():
         print("Invalid Token")
     except Exception as e:
         print(e)
+
 
 if __name__ == "__main__":
     run()
