@@ -13,6 +13,11 @@ python3環境で動作します
 ・discord.py
 ・python-dotenv
 
+インストール
+```
+pip install -r requirements.txt
+```
+
 以下の外部コマンド・パッケージに依存しています
 ・open-jtalk
 ・hts-voice-nitech-jp-atr503-m001
