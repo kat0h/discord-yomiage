@@ -34,6 +34,13 @@ class Yomiage(commands.Bot):
         # await self.change_presence(activity=discord.Game(
         # name="!yomiage", type=1))
 
+    @commands.Cog.listener()
+    async def on_reload(self):
+        for cog in cogs:
+            try:
+                self.reload_extension(cog)
+            except Exception as e:
+                print(e)
 
 def run():
     bot = Yomiage(prefix="!")
